@@ -29,7 +29,7 @@ source env/bin/activate
 
 ### Stop using the Virtual Environment
 ```
-deactivate (STOPS VENV ENV)
+deactivate
 ```
 
 
@@ -38,7 +38,7 @@ deactivate (STOPS VENV ENV)
 ## Routes
 
 ### /calculate/incometax
-#### Parameters
+#### Query Parameters
 ```
 year, 
 annual income
@@ -49,10 +49,22 @@ annual income
 /calculate/incometax?year=2020&annual income=97000
 ```
 
-## Start
-#### Utility Tools
+## Utility Tools
+#### Install requirements
+```
+python -m pip install -r requirements.txt
+```
+
+
+#### Local Start
 To start the local development server run;
 ```
 ./tools/local-start.sh
 ```
 
+
+#### Local Test
+To start the local development server run;
+```
+./tools/local-start.sh
+```
