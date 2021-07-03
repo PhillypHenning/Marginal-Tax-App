@@ -1,16 +1,13 @@
-import unittest
-
-#from main import app
-from src.util.constants import logger
 from main import app
+from src.util.constants import logger
+
+import unittest, json
 
 class MarginalTax2020Tests(unittest.TestCase):
-    def setUp(self):
-        # executed prior to each test
+    def setUp(self):        # executed prior to each test
         self.app = app.test_client()
     
-    def tearDown(self):
-        # executed after each test
+    def tearDown(self):        # executed after each test
         pass
 
     # Test each brackets min, median, max
@@ -22,8 +19,7 @@ class MarginalTax2020Tests(unittest.TestCase):
 
 
     ## BRACKET 1 ##
-    def test_bracket_1_min_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_1_min_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 0
@@ -32,8 +28,7 @@ class MarginalTax2020Tests(unittest.TestCase):
         response = self.app.get('/calculate/incometax', query_string=request_data)
         self.assertEqual(response.status_code, 200)
     
-    def test_bracket_1_max_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_1_max_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 48535
@@ -42,8 +37,7 @@ class MarginalTax2020Tests(unittest.TestCase):
         response = self.app.get('/calculate/incometax', query_string=request_data)
         self.assertEqual(response.status_code, 200)
     
-    def test_bracket_1_med_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_1_med_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 20000
@@ -55,8 +49,7 @@ class MarginalTax2020Tests(unittest.TestCase):
 
 
     ## BRACKET 2 ##
-    def test_bracket_2_min_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_2_min_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 48534
@@ -65,8 +58,7 @@ class MarginalTax2020Tests(unittest.TestCase):
         response = self.app.get('/calculate/incometax', query_string=request_data)
         self.assertEqual(response.status_code, 200)
     
-    def test_bracket_2_max_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_2_max_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 60000
@@ -75,8 +67,7 @@ class MarginalTax2020Tests(unittest.TestCase):
         response = self.app.get('/calculate/incometax', query_string=request_data)
         self.assertEqual(response.status_code, 200)
     
-    def test_bracket_2_med_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_2_med_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 97069
@@ -88,8 +79,7 @@ class MarginalTax2020Tests(unittest.TestCase):
 
 
     ## BRACKET 3 ##
-    def test_bracket_3_min_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_3_min_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 97070
@@ -98,8 +88,7 @@ class MarginalTax2020Tests(unittest.TestCase):
         response = self.app.get('/calculate/incometax', query_string=request_data)
         self.assertEqual(response.status_code, 200)
     
-    def test_bracket_3_max_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_3_max_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 120000
@@ -108,8 +97,7 @@ class MarginalTax2020Tests(unittest.TestCase):
         response = self.app.get('/calculate/incometax', query_string=request_data)
         self.assertEqual(response.status_code, 200)
     
-    def test_bracket_3_med_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_3_med_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 150473
@@ -120,8 +108,7 @@ class MarginalTax2020Tests(unittest.TestCase):
 
 
     ## BRACKET 4 ##
-    def test_bracket_4_min_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_4_min_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 150474
@@ -130,8 +117,7 @@ class MarginalTax2020Tests(unittest.TestCase):
         response = self.app.get('/calculate/incometax', query_string=request_data)
         self.assertEqual(response.status_code, 200)
     
-    def test_bracket_4_max_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_4_max_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 180000
@@ -140,8 +126,7 @@ class MarginalTax2020Tests(unittest.TestCase):
         response = self.app.get('/calculate/incometax', query_string=request_data)
         self.assertEqual(response.status_code, 200)
     
-    def test_bracket_4_med_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_4_med_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 214368
@@ -152,8 +137,7 @@ class MarginalTax2020Tests(unittest.TestCase):
 
 
     ## BRACKET 5 ##
-    def test_bracket_5_min_amount(self):
-        # This actually discovered an error while processing a zero value
+    def test_bracket_5_min_amount(self):        
         request_data = {
             "year" : 2020,
             "annual income": 214400
@@ -161,3 +145,17 @@ class MarginalTax2020Tests(unittest.TestCase):
 
         response = self.app.get('/calculate/incometax', query_string=request_data)
         self.assertEqual(response.status_code, 200)
+
+
+    ## ACCURACY ## 
+    def test_accuracy(self):   
+        expect_tax_paid = 15675.61     
+        request_data = {
+            "year" : 2020,
+            "annual income": 89488
+        }
+
+        response = self.app.get('/calculate/incometax', query_string=request_data)
+        json_res = response.json  
+        self.assertEqual(json_res['Total Federal Taxes'], expect_tax_paid)
+        

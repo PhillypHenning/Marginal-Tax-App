@@ -15,6 +15,7 @@ def clean_dir(file_path):
 DATA_DIR = os.environ.get("DATA_DIR", "./data")
 LOGS_DIR = "{}/logs".format(DATA_DIR)
 ENVIRONMENT = os.environ.get("ENVIRONMENT", 'local')
+PORT = os.environ.get("PORT", 4000)
 
 # AUTHENTICATION
 VALID_YEARS = [2019, 2020]

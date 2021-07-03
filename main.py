@@ -1,4 +1,4 @@
-from src.util.constants import *
+from src.util.constants import PORT
 from src.util.utilities import Get_IP_Address
 
 from src.routes.healthcheck import healthcheck_blueprint
@@ -14,4 +14,4 @@ app.register_blueprint(process_incometax_blueprint)
 
 
 if __name__ == "__main__":
-    app.run(host=Get_IP_Address(), port=4000)
+    app.run(host=Get_IP_Address(), port=PORT)

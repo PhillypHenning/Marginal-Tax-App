@@ -1,7 +1,7 @@
 
 
 
-# PYTHON INSTALLATION NOTES
+# Python Installation
 This project is using virtual environments to manage local development. 
 Please consider using the following;
 1. venv - [Virtual Environment for modules (Pip module)](https://docs.python.org/3/library/venv.html)
@@ -36,7 +36,6 @@ deactivate
 # Python Usage
 
 ## Routes
-
 ### /calculate/incometax
 #### Query Parameters
 ```

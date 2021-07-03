@@ -68,7 +68,7 @@ def process_incometax():
 
                 #logger.info("Annual Amount: [{}] | Annual Amount left to tax: [{}] | Taxes paid: [{}] | Tax rate of: [{}] | Total Tax Paid: [{}]".format(annual_income, taxable_income, taxed_income, bracket['rate'], tax_from_bracket_due))
                 
-                tax_info = {'Total Federal Taxes:': float("{:.2f}".format(taxed_income))}
+                tax_info = {'Total Federal Taxes': float("{:.2f}".format(taxed_income))}
                 break
             
             except Exception as e:
