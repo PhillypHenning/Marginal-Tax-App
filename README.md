@@ -55,7 +55,7 @@ python -m pip install -r requirements.txt
 ```
 
 
-#### Local Start
+#### Local Start - Fresh
 To start the local development server run;
 ```
 ./tool/local-docker-fresh-install.sh
@@ -69,8 +69,15 @@ python -m pip install -r requirements.txt
 ```
 
 
-#### Local Test
+#### Local Test - Fresh
 To start the local development server run;
 ```
-./tools/local-start.sh
+./tool/local-docker-fresh-install.sh
+
+## If you're using python venv module as suggested above
+source /env/bin/activate
+
+python -m pip install -r requirements.txt
+
+./tools/local-test.sh
 ```
