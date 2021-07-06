@@ -2,7 +2,7 @@ from src.util.constants import logger
 
 import netifaces as ni
 
-import platform
+import platform, traceback
 
 def Get_IP_Address():
     # This is a trick that I use when I switch from Linux(RHEL) based servers and my local macbook
@@ -14,13 +14,18 @@ def Get_IP_Address():
 
 
 def Check_Annual_Income_In_Tax_Bracket(annual_income, tax_bracket):
-    if "max" in tax_bracket:
-        if annual_income <= tax_bracket['max'] and annual_income > tax_bracket['min']:
-            return True
-        elif annual_income == 0:
-            return True
-        else: return False
-    else:
-        if annual_income >= tax_bracket['min']:
-            return True
-        else: return False
+    try:
+        if "max" in tax_bracket:
+            if annual_income <= tax_bracket['max'] and annual_income > tax_bracket['min']:
+                return True
+            elif annual_income == 0:
+                return True
+            else: return False
+        
+        else:
+            if annual_income >= tax_bracket['min']:
+                return True
+            else: return False
+    except Exception:
+        logger.info("An error occurred during Check_Annual_Income_In_Tax_Bracket")
+        logger.error(traceback.print_exc())

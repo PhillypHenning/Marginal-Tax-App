@@ -1,7 +1,10 @@
 data/
 env/
+env-test/
 
 __pycache__/
 .pytest_cache/
 
 .python-version
+
+test.output

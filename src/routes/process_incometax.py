@@ -11,7 +11,7 @@ import requests, traceback
 process_incometax_blueprint = Blueprint('calculateincometax', __name__,)
 
 retry_strategy = Retry(
-    total=RETRY_TIMES,
+    total=RETRY_TIMES,  
     status_forcelist=RETRY_ON_CODES,
     allowed_methods=RETRY_ON_METHODS
 )
@@ -29,6 +29,7 @@ def process_incometax():
 
     year = request.args.get("year")
     annual_income = request.args.get("annual income")
+    logger.info("[{}] - Income Tax Calculation started. Year: [{}] | Annual Amount: [{}]".format(callers_id, year, annual_income))
 
     try:
         year = int(year)
@@ -57,25 +58,28 @@ def process_incometax():
     taxable_income = annual_income
     taxed_income = 0
 
-    while index != len(ITD)-1:
+
+    # IMPROVEMENT: Based on the Annual Income total, split the array in half. If the value is under the min range, work down in the array, otherwise work up
+    # This would save a lot of processing time. 
+
+    while index != len(ITD):
         if Check_Annual_Income_In_Tax_Bracket(annual_income, ITD[index]):
             try:
                 bracket = ITD[index]            
-                # Get the Amount taxed by taking bracket amount and multiplying by rate
-                tax_from_bracket_due = taxable_income * bracket['rate']
+                # Get the Amount taxed by taking bracket amount and multiplying by rate                
+                tax_from_bracket_due = taxable_income * float(bracket['rate']) # <-- BUG: FOUND WITH UNITTEST AND FIXED
                 # Total up the taxed income
                 taxed_income = taxed_income + tax_from_bracket_due
-
-                #logger.info("Annual Amount: [{}] | Annual Amount left to tax: [{}] | Taxes paid: [{}] | Tax rate of: [{}] | Total Tax Paid: [{}]".format(annual_income, taxable_income, taxed_income, bracket['rate'], tax_from_bracket_due))
                 
                 tax_info = {'Total Federal Taxes': float("{:.2f}".format(taxed_income))}
                 break
             
             except Exception as e:
                 logger.warning("An error occured while processing IP: [{}]".format(callers_id))
-                logger.error(traceback.print_exc())
+                traceback.print_exc()
+                break # <-- BUG: FOUND WITH UNITTEST AND FIXED
         
-        else:           
+        else:     
             # Annual Amount - "max" amount
             # Max amount * Rate = tax_from_bracket_due
             # MAX - MIN = BRACKET RANGE
@@ -84,17 +88,18 @@ def process_incometax():
                 bracket = ITD[index]
 
                 income_taxable_range = int(bracket['max']) - int(bracket['min'])
-                # No need to worry about finding the total amount being taxed as these brackets are fully 'covered' by the annual amount            
+                # No need to worry about finding the total amount being taxed as these brackets are fully 'covered'          
                 tax_from_bracket_due = income_taxable_range * bracket['rate']
                 taxed_income = taxed_income + tax_from_bracket_due
-
-                #logger.info("Annual Amount: [{}] | Annual Amount left to tax: [{}] | Taxes paid: [{}] | Tax rate of: [{}] | Total Tax Paid: [{}]".format(annual_income, taxable_income, taxed_income, bracket['rate'], tax_from_bracket_due))
-
                 taxable_income = taxable_income - income_taxable_range
                 index=index+1
+            
             except Exception as e:
                 logger.warning("An error occured while processing IP: [{}]".format(callers_id))
+                traceback.print_exc()
+                break # <-- BUG: FOUND WITH UNITTEST AND FIXED
 
+    logger.info("[{}] - Income Tax Calculation completed. Year: [{}] | Annual Amount: [{}] | Tax Paid: [{}]".format(callers_id, year, annual_income, tax_info['Total Federal Taxes']))
     logger.info("Process Income Tax Finished for IP Address: [{}]".format(callers_id))
 
     msg = tax_info | {"Year": year, "Annual Income": annual_income}
